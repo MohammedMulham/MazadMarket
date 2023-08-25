@@ -1,0 +1,86 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="MazadDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Products">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="productName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="ProductsTypeId" Type="Int32" Nullable="false" />
+    <Property Name="Picture" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Price" Type="Double" Nullable="false" />
+    <Property Name="minRaise" Type="Double" Nullable="false" />
+    <Property Name="dateOfAdd" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="dateOfAuctionStart" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="dateOfAuctionEnd" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="approved" Type="Boolean" Nullable="false" />
+    <Property Name="sold" Type="Boolean" Nullable="false" />
+    <Property Name="userId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="dateOfSell" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="ProductsAuctions" Relationship="Self.FK_dbo_ProductsAuctions_dbo_Products_ProductsId" FromRole="Products" ToRole="ProductsAuctions" />
+    <NavigationProperty Name="ProductsTypes" Relationship="MazadDBModel.FK_dbo_Products_dbo_ProductsTypes_ProductsTypeId" FromRole="Products" ToRole="ProductsTypes" />
+  </EntityType>
+  <EntityType Name="ProductsAuctions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ProductsId" Type="Int32" Nullable="false" />
+    <Property Name="riseAmount" Type="Double" Nullable="false" />
+    <Property Name="dateOfRise" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Remarks" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="userId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Products" Relationship="Self.FK_dbo_ProductsAuctions_dbo_Products_ProductsId" FromRole="ProductsAuctions" ToRole="Products" />
+  </EntityType>
+  <Association Name="FK_dbo_ProductsAuctions_dbo_Products_ProductsId">
+    <End Role="Products" Type="Self.Products" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ProductsAuctions" Type="Self.ProductsAuctions" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Products">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="ProductsAuctions">
+        <PropertyRef Name="ProductsId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="MazadDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Products" EntityType="Self.Products" />
+    <EntitySet Name="ProductsAuctions" EntityType="Self.ProductsAuctions" />
+    <AssociationSet Name="FK_dbo_ProductsAuctions_dbo_Products_ProductsId" Association="Self.FK_dbo_ProductsAuctions_dbo_Products_ProductsId">
+      <End Role="Products" EntitySet="Products" />
+      <End Role="ProductsAuctions" EntitySet="ProductsAuctions" />
+    </AssociationSet>
+    <EntitySet Name="ProductsTypes" EntityType="MazadDBModel.ProductsTypes" />
+    <AssociationSet Name="FK_dbo_Products_dbo_ProductsTypes_ProductsTypeId" Association="MazadDBModel.FK_dbo_Products_dbo_ProductsTypes_ProductsTypeId">
+      <End Role="ProductsTypes" EntitySet="ProductsTypes" />
+      <End Role="Products" EntitySet="Products" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="ProductsTypes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="typeName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Picture" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Products" Relationship="MazadDBModel.FK_dbo_Products_dbo_ProductsTypes_ProductsTypeId" FromRole="ProductsTypes" ToRole="Products" />
+  </EntityType>
+  <Association Name="FK_dbo_Products_dbo_ProductsTypes_ProductsTypeId">
+    <End Type="MazadDBModel.ProductsTypes" Role="ProductsTypes" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Type="MazadDBModel.Products" Role="Products" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ProductsTypes">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Products">
+        <PropertyRef Name="ProductsTypeId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>
